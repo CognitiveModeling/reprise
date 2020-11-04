@@ -4,8 +4,8 @@ import os
 import torch
 
 from model import LSTM
-from inference.action_inference import ActionInference
-from inference.context_inference import ContextInference
+from reprise.action_inference import ActionInference
+from reprise.context_inference import ContextInference
 
 from gym_rocketball.envs.agent import Agent
 
