@@ -1,20 +1,14 @@
 # -----------------
 # GENERAL
 # -----------------
-RINGBUFFER_SIZE = 20000
-
-# -----------------
-# RNN
-# -----------------
-NUM_LAYERS = 1  # number of vertical LSTM layers
-HIDDEN_DIM = 36  # Dimension von h
+NUMBER_OF_PROBLEMS = 1
 
 # -----------------
 # INPUT
 # -----------------
 INPUT_POSITION_DIM = 2
 INPUT_MOTOR_DIM = 4
-INPUT_SENSOR_DIM = 16        # 16  
+INPUT_SENSOR_DIM = 16        # 16
 INPUT_ACCELERATION_DIM = 2
 INPUT_DIM = INPUT_POSITION_DIM + INPUT_MOTOR_DIM + INPUT_SENSOR_DIM + INPUT_ACCELERATION_DIM
 
@@ -26,6 +20,8 @@ SENSOR_DIM_START = MOTOR_DIM_END
 SENSOR_DIM_END = SENSOR_DIM_START + INPUT_SENSOR_DIM
 ACCELERATION_DIM_START = SENSOR_DIM_END
 ACCELERATION_DIM_END = ACCELERATION_DIM_START + INPUT_ACCELERATION_DIM
+MIN_MOTOR_VALUE = 0
+MAX_MOTOR_VALUE = 1
 
 # -----------------
 # OUTPUT
@@ -61,59 +57,5 @@ SIGMA = 1.0  # Sigma for Gaussian distribution
 
 BORDER_PROXIMITY_WEIGHT = 0.5   # 0.5
 
-USE_SENSOR_SENSITIVITY = False     
+USE_SENSOR_SENSITIVITY = False
 LEARN_SENSOR_SENSITIVITY = False
-
-#--------------
-# LEARNING
-#--------------
-VISUAL_LEARNING = False    # No visual learning -> Half duration
-VISUAL_LEARNING_STEP_BY_STEP = True and VISUAL_LEARNING
-
-# LEARNING_SCENARIOS = ['alone', 'static', 'alone', 'line', 'alone', 'curve', 'alone', 'line_acc', 'alone', 'curve_acc']
-# LEARNING_SCENARIOS = ['static']
-LEARNING_SCENARIOS = ['static', 'line', 'curve', 'line_acc', 'curve_acc']
-POSITION_WEIGHT_LEARNING = 100      # 100
-SENSOR_WEIGHT_LEARNING = 10.0       # 10
-ACCELERATION_WEIGHT_LEARNING = 0.01  # 1e-5
-
-#------------------
-# ACTINF
-#------------------
-MODE = 71
-# -1    Alone
-# 0     Same target
-# 1     Chase with rnd target, stage 1
-# 2     Chase with target line
-# 3     Obstacle in center
-# 4     B chases A, A wants distance
-# 5     B wants proximity, A does not
-# 6     -1 but with loss
-# 7x    Obstacle avoidance
-#   71  Static B
-#   72  B is two positions behind A
-#   73  B is opposite of A
-#   74  B starts in middle with same goal as A
-# 8     Uniform distribution
-# 9     Goal directed actinf with obstacles
-# 10    Chase with rnd target, stage 3
-# 11    A static in center. B flies by
-
-MASK_GRADIENTS_AT_PROXIMITY = False
-
-USE_SCV = True
-SCV_SMOOTHING_FACTOR = 0.5  # 0.5
-SCV_WEIGHTING_FACTOR = 4    # 4
-SCV_BETA = 4    # 4
-
-PLOT_SCV_GOALS = True
-
-
-CLAMP_TARGET_VELOCITY = True
-CLAMP_TARGET_VELOCITY_VALUE = 0.015
-
-POSITION_LOSS_WEIGHT_ACTINF = 1.0
-SENSOR_LOSS_WEIGHT_ACTINF = 0.
-
-VEHICLE = 1
-
