@@ -29,13 +29,17 @@ class ActionInference():
     policy_handler : function
         Function that is applied to the policy after each optimization,
         e.g. can be used to keep policy in certain range.
+    output_handler : function
+        Function that is applied to the output during prediction before it is
+        concatenated with the policy to be fed back into the model.
+        network
 
     """
 
     def __init__(
             self, model, policy, optimizer, inference_cycles=30,
             criterion=torch.nn.MSELoss(), reset_optimizer=True,
-            policy_handler=lambda x: x):
+            policy_handler=lambda x: x, output_handler=lambda x: x):
 
         assert (len(policy.shape) ==
                 3), "policy should be of shape (seq_len, batch, input_size)"
@@ -51,6 +55,7 @@ class ActionInference():
         if self._reset_optimizer:
             self._optimizer_orig_state = optimizer.state_dict()
         self._policy_handler = policy_handler
+        self._output_handler = output_handler
 
     def predict(self, x, state, context):
         """Predict into future.
@@ -85,6 +90,7 @@ class ActionInference():
             x, state = self._model.forward(inp, state)
             outputs.append(x)
             states.append(state)
+            x = self._output_handler(x)
         return outputs, states
 
     def action_inference(self, x, state, context, target):
