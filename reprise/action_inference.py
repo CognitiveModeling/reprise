@@ -15,20 +15,25 @@ class ActionInference():
     ----------
     model : torch.nn.Module
         Recurrent neural network model which might be pretrained.
-    policy : torch.Tensor
-        Initial policy consisting of actions.
+    policy : torch.Tensor of shape (inference_len, batch, action_size)
+        Initial policy consisting of actions. It determines the inference
+        length, i.e. how far the model will predict into the future.
+    criterion : function
+        Criterion for comparison of a list of predictions and a target of shape
+        (target_len, batch, observation_size), where target_len must be less or
+        equal to inference_len. The target will be right-aligned for
+        comparison, i.e. the first inference_len - target_len predictions will
+        be ignored.
     optimizer : torch.optim.Optimizer
         Optimizer to optimize the policy with.
-    inference_cycles : int
-        Number of inference cycles.
-    criterion : function
-        Criterion for comparison of a list of predictions and a target.
     reset_optimizer : bool
         If True the optimizer's statistics are reset before each inference.
         If False the optimizer's statistics are kept across inferences.
+    inference_cycles : int
+        Number of inference cycles, i.e. how often inference is repeated.
     policy_handler : function
         Function that is applied to the policy after each optimization,
-        e.g. can be used to keep policy in certain range.
+        e.g. can be used to keep policy in certain range by clamping.
     output_handler : function
         Function that is applied to the output during prediction before it is
         concatenated with the policy to be fed back into the model.
@@ -36,10 +41,9 @@ class ActionInference():
 
     """
 
-    def __init__(
-            self, model, policy, optimizer, inference_cycles=30,
-            criterion=torch.nn.MSELoss(), reset_optimizer=True,
-            policy_handler=lambda x: x, output_handler=lambda x: x):
+    def __init__(self, model, policy, criterion, optimizer,
+                 reset_optimizer=True, inference_cycles=10,
+                 policy_handler=lambda x: x, output_handler=lambda x: x):
 
         assert (len(policy.shape) ==
                 3), "policy should be of shape (seq_len, batch, input_size)"
@@ -48,14 +52,15 @@ class ActionInference():
         self._model = model
         self._policy = policy
         self._policy.requires_grad = True
-        self._inference_cycles = inference_cycles
         self._criterion = criterion
         self._optimizer = optimizer
         self._reset_optimizer = reset_optimizer
-        if self._reset_optimizer:
-            self._optimizer_orig_state = optimizer.state_dict()
+        self._inference_cycles = inference_cycles
         self._policy_handler = policy_handler
         self._output_handler = output_handler
+
+        if self._reset_optimizer:
+            self._optimizer_orig_state = optimizer.state_dict()
 
     def predict(self, x, state, context):
         """Predict into future.

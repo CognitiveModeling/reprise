@@ -20,20 +20,20 @@ class ContextInference():
     opt_accessor : function
         Function that returns list of tensors to be optimized alongside of
         the context, usually the hidden state.
-    context : torch.Tensor
+    context : torch.Tensor of shape (1, batch, context_size)
         Initial context.
-    optimizer : torch.optim.Optimizer
-        Optimizer to optimize the context and hidden state with.
-    inference_length : int
-        Number of past steps considered during optimization.
-    inference_cycles : int
-        Number of inference cycles.
     criterion : function
         Criterion for comparison of a list of past predictions and a list of
         observations.
+    optimizer : torch.optim.Optimizer
+        Optimizer to optimize the context and hidden state with.
     reset_optimizer : bool
         If True the optimizer's statistics are reset before each inference.
         If False the optimizer's statistics are kept across inferences.
+    inference_length : int
+        Number of past steps considered during optimization.
+    inference_cycles : int
+        Number of inference cycles, i.e. how often inference is repeated.
     context_handler : function
         Function that is applied to the context after each optimization,
         e.g. can be used to keep context in certain range.
@@ -41,33 +41,32 @@ class ContextInference():
     """
 
     def __init__(
-            self, model, initial_model_state, opt_accessor,
-            context, optimizer, inference_length=1, inference_cycles=1,
-            criterion=torch.nn.MSELoss(), reset_optimizer=True,
-            context_handler=lambda context: context):
+            self, model, initial_model_state, opt_accessor, context, criterion,
+            optimizer, reset_optimizer=True, inference_length=5,
+            inference_cycles=5, context_handler=lambda x: x):
 
         assert (len(context.shape) ==
                 3), "context should be of shape (seq_len, batch, input_size)"
         assert (context.size(0) == 1), "seq_len of context should be 1"
 
         self._model = model
+        self._model_state = initial_model_state
         self._opt_accessor = opt_accessor
-        self._inference_length = inference_length
-        self._inference_cycles = inference_cycles
         self._context = context
         self._context.requires_grad = True
         self._criterion = criterion
         self._optimizer = optimizer
         self._reset_optimizer = reset_optimizer
+        self._inference_length = inference_length
+        self._inference_cycles = inference_cycles
+        self._context_handler = context_handler
+
         if self._reset_optimizer:
             self._optimizer_orig_state = optimizer.state_dict()
-        self._context_handler = context_handler
 
         # Buffers to store the histories of inputs and outputs
         self._model_inputs = []
         self._observations = []
-
-        self._model_state = initial_model_state
 
         assert (len(self._opt_accessor(self._model_state)) ==
                 len(self._optimizer.param_groups[1]['params']))
