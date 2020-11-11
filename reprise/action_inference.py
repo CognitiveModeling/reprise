@@ -37,7 +37,6 @@ class ActionInference():
     output_handler : function
         Function that is applied to the output during prediction before it is
         concatenated with the policy to be fed back into the model.
-        network
 
     """
 
