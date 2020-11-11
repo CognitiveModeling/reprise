@@ -73,7 +73,7 @@ class RocketballEnv(gym.Env):
             for terrain in self.terrains:
                 if terrain.contains(agent.position):
                     noise += terrain.noise
-            observation.append((agent.id, agent.position + np.random.normal(loc=0.0, scale=noise, size=2), self.calc_sensor_data(agent), agent.target))
+            observation.append((agent.id, agent.position, agent.position + np.random.normal(loc=0.0, scale=noise, size=2), self.calc_sensor_data(agent), agent.target))
         for obstacle in self.obstacles:
             observation.append((obstacle.id, obstacle.position))
         reward = 0
