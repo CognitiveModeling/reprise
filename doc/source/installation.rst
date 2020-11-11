@@ -25,4 +25,4 @@ from `pypi <https://pypi.python.org/pypi>`_ with:
 
 .. code:: bash
 
-    pip install --user pyndl
+    pip install --user reprise
