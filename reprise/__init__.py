@@ -1,8 +1,9 @@
 """
 reprise - REtrospective and PRospective Inference SchEme
-========================================================
+--------------------------------------------------------
 *reprise* is an implementation of the REtrospective and PRospective Inference
 SchEme in python.
+
 """
 
 

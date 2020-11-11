@@ -1,13 +1,16 @@
-"""Action inference as part of REPRISE.
+"""
+Action inference as part of REPRISE.
 
 This module provides the functionality to infer actions.
+
 """
 
 import torch
 
 
 class ActionInference():
-    """Action inference class.
+    """
+    Action inference class.
 
     An instance of this class provides the functionality to infer actions.
 
@@ -62,7 +65,8 @@ class ActionInference():
             self._optimizer_orig_state = optimizer.state_dict()
 
     def predict(self, x, state, context):
-        """Predict into future.
+        """
+        Predict into future.
 
         Predict observations given the current policy as well as an initial
         input and hidden state, and a context.
@@ -98,7 +102,8 @@ class ActionInference():
         return outputs, states
 
     def action_inference(self, x, state, context, target):
-        """Optimize the current policy.
+        """
+        Optimize the current policy.
 
         Given an initial input, an initial hidden state, a context, and a
         target, this method infers a policy based on an imagination into the

@@ -9,6 +9,7 @@ from reprise.context_inference import ContextInference
 
 from gym_rocketball.envs.agent import Agent
 
+TEST_ROOT = os.path.join(os.path.pardir, os.path.dirname(__file__))
 
 context_size = 3
 action_size = 4
@@ -116,11 +117,11 @@ def test_reprise():
         all_contexts.append(context.detach())
         all_actions.append(action.detach())
 
-    contexts_file = os.path.join('references', 'test_reprise_contexts.npy')
-    actions_file = os.path.join('references', 'test_reprise_actions.npy')
+    contexts_file = os.path.join(TEST_ROOT, 'references/test_reprise_contexts.npy')
+    actions_file = os.path.join(TEST_ROOT, 'references/test_reprise_actions.npy')
 
     contexts_ref = np.load(open(contexts_file, 'rb'))
     actions_ref = np.load(open(actions_file, 'rb'))
 
-    assert np.allclose(contexts_ref, torch.stack(all_contexts, dim=0).numpy())
-    assert np.allclose(actions_ref, torch.stack(all_actions, dim=0).numpy())
+    assert np.allclose(contexts_ref, torch.stack(all_contexts, dim=0).numpy(), rtol=1e-04)
+    assert np.allclose(actions_ref, torch.stack(all_actions, dim=0).numpy(), rtol=1e-04)

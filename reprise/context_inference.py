@@ -1,13 +1,16 @@
-"""Context inference as part of REPRISE.
+"""
+Context inference as part of REPRISE.
 
 This module provides the functionality to infer contexts.
+
 """
 
 import torch
 
 
 class ContextInference():
-    """Context inference class.
+    """
+    Context inference class.
 
     An instance of this class provides the functionality to infer contexts.
 
@@ -72,7 +75,8 @@ class ContextInference():
                 len(self._optimizer.param_groups[1]['params']))
 
     def predict(self, state):
-        """Predict from the past.
+        """
+        Predict from the past.
 
         Predict observations given past inputs as well as an initial hidden
         state and a context.
@@ -104,7 +108,8 @@ class ContextInference():
         return outputs, states
 
     def context_inference(self, model_input, observation):
-        """Optimize the current context.
+        """
+        Optimize the current context.
 
         Given current inputs and observations, this method infers a context
         based on past model inputs and observations.
