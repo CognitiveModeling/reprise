@@ -7,7 +7,7 @@ from model import LSTM
 from reprise.action_inference import ActionInference
 from reprise.context_inference import ContextInference
 
-from gym_rocketball.envs.agent import Agent
+from reprise.gym.rocketball.agent import Agent
 
 TEST_ROOT = os.path.join(os.path.pardir, os.path.dirname(__file__))
 
@@ -78,7 +78,7 @@ def test_reprise():
     targets = targets[:, None, :]
     delta = torch.zeros([1, 1, 2])
 
-    env = gym.make('gym_rocketball:rocketball-v0')
+    env = gym.make('reprise.gym:rocketball-v0')
     env.reset()
     agent = Agent(id='foo', mode=0, init_pos=np.array([0, 1]), color='black')
     agent.update_target(targets[0][0].numpy())

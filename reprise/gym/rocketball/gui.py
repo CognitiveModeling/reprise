@@ -5,7 +5,7 @@ import numpy as np
 import tkinter as tk
 import pyscreenshot as ImageGrab  # For Linux
 
-import gym_rocketball.envs.config as c
+from . import config as c
 
 
 class GUI(object):

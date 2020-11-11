@@ -4,10 +4,10 @@ import random
 import gym
 import numpy as np
 
-import gym_rocketball.envs.agent as a
-import gym_rocketball.envs.terrain as t
-import gym_rocketball.envs.config as c
-import gym_rocketball.envs.gui as gui
+from . import agent as a
+from . import terrain as t
+from . import config as c
+from . import gui as gui
 
 
 class RocketballEnv(gym.Env):

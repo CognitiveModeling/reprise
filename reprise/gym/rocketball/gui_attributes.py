@@ -1,5 +1,6 @@
 import numpy as np
-import gym_rocketball.envs.config as c
+
+from . import config as c
 
 
 class Gui_attributes():

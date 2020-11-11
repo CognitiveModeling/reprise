@@ -1,5 +1,4 @@
 
-
 class Terrain(object):
 
     def __init__(self, start, end, color, gravity, noise):

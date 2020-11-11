@@ -3,8 +3,8 @@ import random
 
 import numpy as np
 
-import gym_rocketball.envs.config as c
-from gym_rocketball.envs.gui_attributes import Gui_attributes
+from . import config as c
+from .gui_attributes import Gui_attributes
 
 
 class RB3Mode(Enum):
