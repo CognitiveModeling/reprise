@@ -11,16 +11,18 @@ Let's start with some imports:
 
     >>> import numpy as np
     >>> import torch
+    >>> import gym
     >>> from reprise.action_inference import ActionInference
     >>> from reprise.context_inference import ContextInference
-    >>> from gym_rocketball.envs.agent import Agent
+    >>> from reprise.gym.rocketball.agent import Agent
 
 We want to be able to reproduce this example:
 
 .. code-block:: python
 
     >>> np.random.seed(123)
-    >>> torch.manual_seed(123)
+    >>> torch.manual_seed(123)  # doctest: +ELLIPSIS
+    <torch._C.Generator object at ...>
 
 Set context size which is the number of contexts neurons our neural network will have.
 Furthermore set the sizes of an action and an observation, which are 4 and 2 for the rocketball environment, respectively (4 thrusts on each rocket, x and y coordinates).
@@ -42,19 +44,19 @@ In this case, we will use a very simple definition for an LSTM:
 .. code-block:: python
 
     >>> class LSTM(torch.nn.Module):
-    >>>     def __init__(self, input_size, hidden_size,
+    ...     def __init__(self, input_size, hidden_size,
     ...                  num_layers, observation_size):
-    >>>         super(LSTM, self).__init__()
-    >>>         self.lstm = torch.nn.LSTM(
+    ...         super(LSTM, self).__init__()
+    ...         self.lstm = torch.nn.LSTM(
     ...             input_size=input_size,
     ...             hidden_size=hidden_size,
     ...             num_layers=num_layers)
-    >>>         self.fc = torch.nn.Linear(hidden_size, observation_size)
-    >>>
-    >>>     def forward(self, x, state=None):
-    >>>         x, state = self.lstm(x, state)
-    >>>         x = self.fc(x)
-    >>>         return x, state
+    ...         self.fc = torch.nn.Linear(hidden_size, observation_size)
+    ...
+    ...     def forward(self, x, state=None):
+    ...         x, state = self.lstm(x, state)
+    ...         x = self.fc(x)
+    ...         return x, state
 
 We can already create an instance of it together with some initial hidden and cell states.
 We create a second pair of hidden and cell states for context inference.
@@ -79,11 +81,11 @@ Therefore, the inputs and outputs of the model are deltas and we need to accumul
     >>> criterion = torch.nn.MSELoss()
     >>>
     >>> def ci_loss(outputs, observations):
-    >>>     return criterion(torch.cat(outputs, dim=0),
+    ...     return criterion(torch.cat(outputs, dim=0),
     ...                      torch.cat(observations, dim=0))
     >>>
     >>> def ai_loss(outputs, targets):
-    >>>     return criterion(torch.cumsum(
+    ...     return criterion(torch.cumsum(
     ...         torch.cat(outputs, dim=0), dim=0), targets)
 
 Now we can create an action inference object.
@@ -113,7 +115,8 @@ After creating the optimizer, we pass everything to the context inference constr
 .. code-block:: python
 
     >>> context = torch.zeros([1, 1, context_size])
-    >>> def opt_accessor(state): return [state[0]]
+    >>> def opt_accessor(state):
+    ...     return [state[0]]
     >>> params = [{'params': [context], 'lr': 0.1},
     ...           {'params': opt_accessor(lstm_state), 'lr': 0.0001}]
     >>> optimizer = torch.optim.Adam(params)
@@ -141,7 +144,7 @@ We use gym to create the environment and add our agent.
     >>> targets = targets[:, None, :]
     >>> delta = torch.zeros([1, 1, 2])
 
-    >>> env = gym.make('gym_rocketball:rocketball-v0')
+    >>> env = gym.make('reprise.gym:rocketball-v0')
     >>> env.reset()
     >>> agent = Agent(id='foo', mode=0, init_pos=np.array([0, 1]), color='black')
     >>> agent.update_target(targets[0][0].numpy())
@@ -154,26 +157,55 @@ Now everything is in place and we can actually loop over the environment to cont
 .. code-block:: python
 
     >>> for t in range(50):
-    >>>     observation = env.step([action.numpy()])
-    >>>     position_old = position.clone()
-    >>>     position = torch.Tensor(observation[0][0][1])
-    >>>     position = position[None, None, :]
-    >>>     delta_old = delta.clone()
-    >>>     delta = position - position_old
-
-    >>>     x_t = torch.zeros([1, 1, input_size])
-    >>>     x_t[0, 0, :context_size] = context.detach()
-    >>>     x_t[0, 0, context_size:context_size + action_size] = action
-    >>>     x_t[0, 0, -observation_size:] = delta_old
-
-    >>>     with torch.no_grad():
+    ...     observation = env.step([action.numpy()])
+    ...     position_old = position.clone()
+    ...     position = torch.Tensor(observation[0][0][1])
+    ...     position = position[None, None, :]
+    ...     delta_old = delta.clone()
+    ...     delta = position - position_old
+    ...
+    ...     x_t = torch.zeros([1, 1, input_size])
+    ...     x_t[0, 0, :context_size] = context.detach()
+    ...     x_t[0, 0, context_size:context_size + action_size] = action
+    ...     x_t[0, 0, -observation_size:] = delta_old
+    ...
+    ...     with torch.no_grad():
     ...         y_t, lstm_state = model.forward(x_t, lstm_state)
-    >>>     context, _, states = ci.context_inference(
+    ...     context, _, states = ci.context_inference(
     ...         x_t[:, :, context_size:], delta)
-    >>>     lstm_state = (
+    ...     lstm_state = (
     ...         states[-1][0].clone().detach(),
     ...         states[-1][1].clone().detach())
-    >>>     policy, _, _ = ai.action_inference(
+    ...     policy, _, _ = ai.action_inference(
     ...         delta, lstm_state, context.clone().detach().repeat(
     ...             policy.shape[0], 1, 1), targets - position)
-    >>>     action = policy[0][0].detach()
+    ...     action = policy[0][0].detach()
+
+
+To look into the context and policy of the last time step you can do:
+
+.. code-block:: python
+
+    >>> print(context)
+    tensor([[[8.3475, 8.6974]]], requires_grad=True)
+
+    >>> print(policy)
+    tensor([[[-2.7800, -2.6248,  5.1453,  5.2705]],
+    <BLANKLINE>
+            [[-2.6406, -2.3476,  5.0501,  5.1365]],
+    <BLANKLINE>
+            [[-2.5420, -2.0822,  4.9926,  4.8779]],
+    <BLANKLINE>
+            [[-2.4809, -1.9091,  4.7418,  4.8632]],
+    <BLANKLINE>
+            [[-2.4546, -1.6253,  4.6789,  4.8799]],
+    <BLANKLINE>
+            [[-2.2655, -1.6148,  4.5999,  4.9330]],
+    <BLANKLINE>
+            [[-2.2867, -1.6178,  4.5365,  4.9930]],
+    <BLANKLINE>
+            [[-2.3020, -1.6191,  4.4833,  5.0297]],
+    <BLANKLINE>
+            [[-2.3059, -1.6162,  4.4822,  5.0515]],
+    <BLANKLINE>
+            [[-2.3082, -1.6133,  4.4830,  5.0539]]], grad_fn=<CloneBackward>)
