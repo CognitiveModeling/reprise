@@ -10,3 +10,8 @@ First, you need to install *reprise*. The easiest way to do this is using
 .. code:: bash
 
     pip install --user reprise
+
+Examples
+--------
+
+See :ref:`examples`.
