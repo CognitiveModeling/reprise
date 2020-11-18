@@ -67,7 +67,7 @@ html_static_path = ['_static']
 
 html_context = {
     "display_github": True,
-    "github_user": 'fedorsc',
+    "github_user": 'CognitiveModeling',
     "github_repo": 'reprise',
     "github_version": 'master',
     "conf_py_path": '/doc/source/'
