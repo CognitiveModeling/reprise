@@ -51,6 +51,8 @@ class ContextInference():
         assert (len(context.shape) ==
                 3), "context should be of shape (seq_len, batch, input_size)"
         assert (context.size(0) == 1), "seq_len of context should be 1"
+        assert (len(opt_accessor(initial_model_state)) == len(
+            optimizer.param_groups[1]['params'])), "opt_accessor must return list that has same length as second second param_group of optimizer"
 
         self._model = model
         self._model_state = initial_model_state
@@ -70,9 +72,6 @@ class ContextInference():
         # Buffers to store the histories of inputs and outputs
         self._model_inputs = []
         self._observations = []
-
-        assert (len(self._opt_accessor(self._model_state)) ==
-                len(self._optimizer.param_groups[1]['params']))
 
     def predict(self, state):
         """
