@@ -3,3 +3,5 @@ reprise.egg-info/
 doc/build/
 build/
 dist/
+*.sw[po]
+.ropeproject/
