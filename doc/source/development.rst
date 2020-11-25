@@ -69,13 +69,13 @@ Workflow
 
     .. code:: bash
 
-        pip install --user tox pylint pytest pycodestyle sphinx
+        pip install --user pylint pytest sphinx
 
 
 Running tests
 -------------
 
-We use ``make`` and ``tox`` to manage testing. You can run the tests by
+We use ``make`` and ``pytest`` to manage testing. You can run the tests by
 executing the following within the repository's root folder (``reprise/``):
 
 .. code:: bash
@@ -87,12 +87,6 @@ For manually checking coding guidelines run:
 .. code:: bash
 
     make checkstyle
-
-There is an additional way to invoke ``pylint`` as a linter with tox by running
-
-.. code:: bash
-
-    tox -e lint
 
 The linting gives still a lot of complaints that need some decisions on how to
 fix them appropriately.
