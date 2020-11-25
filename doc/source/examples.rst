@@ -188,26 +188,10 @@ To look into the context and policy of the last time step you can do:
 
 .. code-block:: python
 
-    >>> print(context)
-    tensor([[[8.3475, 8.6974]]], requires_grad=True)
+    >>> print(context)  # doctest: +ELLIPSIS
+    tensor([[[8.3..., 8.6...]]], requires_grad=True)
 
-    >>> print(policy)
-    tensor([[[-2.7800, -2.6248,  5.1453,  5.2705]],
-    <BLANKLINE>
-            [[-2.6406, -2.3476,  5.0501,  5.1365]],
-    <BLANKLINE>
-            [[-2.5420, -2.0822,  4.9926,  4.8779]],
-    <BLANKLINE>
-            [[-2.4809, -1.9091,  4.7418,  4.8632]],
-    <BLANKLINE>
-            [[-2.4546, -1.6253,  4.6789,  4.8799]],
-    <BLANKLINE>
-            [[-2.2655, -1.6148,  4.5999,  4.9330]],
-    <BLANKLINE>
-            [[-2.2867, -1.6178,  4.5365,  4.9930]],
-    <BLANKLINE>
-            [[-2.3020, -1.6191,  4.4833,  5.0297]],
-    <BLANKLINE>
-            [[-2.3059, -1.6162,  4.4822,  5.0515]],
-    <BLANKLINE>
-            [[-2.3082, -1.6133,  4.4830,  5.0539]]], grad_fn=<CloneBackward>)
+    >>> print(policy)  # doctest: +ELLIPSIS
+    tensor([[[-2..., -2...,  5...,  5...]],
+    ...
+            [[-2..., -1...,  4...,  5...]]], grad_fn=<CloneBackward>)
