@@ -1,7 +1,8 @@
 import torch
 
-from model import LSTM
 from reprise.action_inference import ActionInference
+
+from .model import LSTM
 
 
 criterion = torch.nn.MSELoss()

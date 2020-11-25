@@ -1,7 +1,8 @@
 import torch
 
-from model import LSTM
 from reprise.context_inference import ContextInference
+
+from .model import LSTM
 
 
 criterion = torch.nn.MSELoss()

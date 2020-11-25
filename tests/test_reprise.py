@@ -3,11 +3,12 @@ import numpy as np
 import os
 import torch
 
-from model import LSTM
 from reprise.action_inference import ActionInference
 from reprise.context_inference import ContextInference
-
 from reprise.gym.rocketball.agent import Agent
+
+from .model import LSTM
+
 
 TEST_ROOT = os.path.join(os.path.pardir, os.path.dirname(__file__))
 
