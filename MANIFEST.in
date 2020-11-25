@@ -10,4 +10,8 @@ global-exclude *.py[co]
 global-exclude *.so
 global-exclude *.sw[po]
 global-exclude *.c
+global-exclude .gitignore
 prune doc/build
+prune .ropeproject
+prune */.ropeproject
+prune */*/.ropeproject
