@@ -48,7 +48,7 @@ def test_context_inference_zeros():
     x_t = torch.zeros([1, 5, 2])
     delta = torch.zeros([1, 5, 2])
 
-    context, outputs, states = ci.context_inference(x_t, delta)
+    context, outputs, states = ci.infer_contexts(x_t, delta)
 
     assert torch.eq(context, torch.zeros([1, 5, 2])).all()
     assert torch.eq(outputs[0], torch.zeros([1, 5, 2])).all()
@@ -84,7 +84,7 @@ def test_context_inference():
     x_t = torch.rand([1, 5, 2])
     delta = torch.rand([1, 5, 2])
 
-    context, outputs, states = ci.context_inference(x_t, delta)
+    context, outputs, states = ci.infer_contexts(x_t, delta)
 
     assert torch.allclose(
         context, torch.Tensor([[[0.3695391119,  0.7943273783],

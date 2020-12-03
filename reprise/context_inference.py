@@ -106,7 +106,7 @@ class ContextInference():
             states.append(state)
         return outputs, states
 
-    def context_inference(self, model_input, observation):
+    def infer_contexts(self, model_input, observation):
         """
         Optimize the current context.
 

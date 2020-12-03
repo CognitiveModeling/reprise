@@ -105,12 +105,12 @@ def test_reprise():
 
         with torch.no_grad():
             y_t, lstm_state = model.forward(x_t, lstm_state)
-        context, _, states = ci.context_inference(
+        context, _, states = ci.infer_contexts(
             x_t[:, :, context_size:], delta)
         lstm_state = (
             states[-1][0].clone().detach(),
             states[-1][1].clone().detach())
-        policy, _, _ = ai.action_inference(
+        policy, _, _ = ai.infer_actions(
             delta, lstm_state, context.clone().detach().repeat(
                 policy.shape[0], 1, 1), targets - position)
         action = policy[0][0].detach()

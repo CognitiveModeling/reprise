@@ -101,7 +101,7 @@ class ActionInference():
             x = self._output_handler(x)
         return outputs, states
 
-    def action_inference(self, x, state, context, target):
+    def infer_actions(self, x, state, context, target):
         """
         Optimize the current policy.
 

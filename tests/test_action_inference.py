@@ -42,7 +42,7 @@ def test_action_inference_zeros():
     delta = torch.zeros([1, 1, 2])
     context = torch.zeros([10, 1, 0])
     targets = torch.zeros([10, 1, 2])
-    policy, path, states = ai.action_inference(
+    policy, path, states = ai.infer_actions(
         delta, lstm_state, context, targets)
 
     assert torch.eq(policy, torch.zeros([1, 10, 2])).all()
@@ -75,7 +75,7 @@ def test_action_inference():
     context = torch.rand([10, 1, 0])
     targets = torch.rand([10, 1, 2])
     offset = torch.rand([2])
-    policy, path, states = ai.action_inference(
+    policy, path, states = ai.infer_actions(
         delta, lstm_state, context, targets - offset)
 
     assert torch.allclose(
