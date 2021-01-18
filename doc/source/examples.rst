@@ -189,9 +189,9 @@ To look into the context and policy of the last time step you can do:
 .. code-block:: python
 
     >>> print(context)  # doctest: +ELLIPSIS
-    tensor([[[8.3..., 8.6...]]], requires_grad=True)
+    tensor([[[7.8..., 9.1...]]], requires_grad=True)
 
     >>> print(policy)  # doctest: +ELLIPSIS
-    tensor([[[-2..., -2...,  5...,  5...]],
+    tensor([[[ 6..., -7..., -6...,  7...]],
     ...
-            [[-2..., -1...,  4...,  5...]]], grad_fn=<CloneBackward>)
+    ...     [[ 4..., -7..., -6...,  7...]]], grad_fn=<CloneBackward>)

@@ -73,6 +73,13 @@ class ContextInference():
         self._model_inputs = []
         self._observations = []
 
+        self._model_state = initial_model_state
+        for s in self._opt_accessor(self._model_state):
+            s.requires_grad_()
+
+        assert (len(self._opt_accessor(self._model_state)) ==
+                len(self._optimizer.param_groups[1]['params']))
+
     def predict(self, state):
         """
         Predict from the past.
@@ -149,13 +156,6 @@ class ContextInference():
         self._observations.append(observation)
         self._observations = self._observations[-self._inference_length:]
 
-        for _ in self._opt_accessor(self._model_state):
-            self._optimizer.param_groups[1]['params'].pop(-1)
-
-        for o in self._opt_accessor(self._model_state):
-            o.requires_grad_()
-            self._optimizer.param_groups[1]['params'].append(o)
-
         # Perform context inference cycles
         for _ in range(self._inference_cycles):
             self._optimizer.zero_grad()
@@ -177,6 +177,8 @@ class ContextInference():
         # the final output and state to be returned
         with torch.no_grad():
             outputs, states = self.predict(self._model_state)
-            self._model_state = states[0]
+            for i in range(len(self._model_state)):
+                for j in range(len(self._model_state[i])):
+                    self._model_state[i][j].data = states[0][i][j].data
 
         return self._context, outputs, states
