@@ -4,6 +4,22 @@ reprise - REtrospective and PRospective Inference SchEme
 
 *reprise* is an implementation of the REtrospective and PRospective Inference SchEme in python.
 
+.. code:: bibtex
+
+    @article{butz2019reprise,
+        title = {Learning, planning, and control in a monolithic neural event inference architecture},
+        author = {Butz, Martin V. and Bilkey, David and Humaidan, Dania and Knott, Alistair and Otte, Sebastian},
+        issn = {08936080},
+        doi = {10.1016/j.neunet.2019.05.001},
+        journal = {Neural Networks},
+        month = may,
+        year = {2019},
+        volume = {117},
+        pages = {135--144}   
+    }
+
+A preprint is available on arXiv: https://arxiv.org/abs/1809.07412
+
 Installation
 ============
 
