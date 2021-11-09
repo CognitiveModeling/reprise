@@ -1,3 +1,5 @@
 torch>=1.6
 gym
 pyscreenshot
+numpydoc
+easydev
